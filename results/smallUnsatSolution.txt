@@ -1,0 +1,2 @@
+c Výsledek pro nesplnitelnou instanci (K3, k=1)
+Unsatisfiable: no solution exists.
