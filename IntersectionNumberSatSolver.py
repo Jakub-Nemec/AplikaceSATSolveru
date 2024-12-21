@@ -1,5 +1,35 @@
 import subprocess
 
+def read_dimacs_file(filename="smallSat.txt"):
+    """
+    Načte soubor ve formátu DIMACS a vrátí graf a počet intervalů.
+    """
+    graph = {'vertices': [], 'edges': []}
+    num_intervals = 0
+    with open(filename, 'r') as f:
+        lines = f.readlines()
+        for line in lines:
+            if line.startswith('c'):
+                continue  # Komentáře
+            if line.startswith('p'):
+                parts = line.split()
+                num_vars = int(parts[2])
+                num_clauses = int(parts[3])
+            elif line.strip():
+                clause = list(map(int, line.strip().split()))[:-1]  # Odebrání '0'
+                if len(clause) == 2:  # Formát pro hrany
+                    u, v = abs(clause[0]), abs(clause[1])
+                    if u not in graph['vertices']:
+                        graph['vertices'].append(u)
+                    if v not in graph['vertices']:
+                        graph['vertices'].append(v)
+                    graph['edges'].append((u, v))
+
+    # Počet intervalů je extrahován ze souboru
+    num_intervals = num_vars // len(graph['vertices'])
+
+    return graph, num_intervals
+
 def write_dimacs_cnf(graph, num_intervals, filename="problem.cnf"):
     """
     Generuje CNF ve formátu DIMACS pro Intersection Number.
@@ -66,12 +96,8 @@ def decode_solution(solution, graph, num_intervals):
     return intervals
 
 def main():
-    # Načtení příkladu grafu
-    graph = {
-        'vertices': [1, 2, 3],
-        'edges': [(1, 2), (2, 3), (3, 1)]
-    }
-    num_intervals = 2  # Počet intervalů, který chceme testovat
+    # Načtení grafu a počtu intervalů z DIMACS souboru
+    graph, num_intervals = read_dimacs_file("smallSat.txt")
 
     # Generování CNF a spuštění solveru
     write_dimacs_cnf(graph, num_intervals)
