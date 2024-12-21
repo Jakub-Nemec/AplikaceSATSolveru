@@ -6,27 +6,23 @@ Tento projekt implementuje řešení problému **Intersection Number** grafu pom
 
 ## 1. Popis problému: Intersection Number  
 
-Intersection Number grafu \( G = (V, E) \) je definováno jako minimální počet intervalů \( k \), takových že:  
-- Každému vrcholu \( v \in V \) je přiřazena množina intervalů \( I_v \subseteq \{1, \ldots, k\} \).  
-- Každá hrana \( (u, v) \in E \) má alespoň jeden průnik mezi intervaly \( I_u \) a \( I_v \), tj. \( I_u \cap I_v \neq \emptyset \).  
+Intersection Number grafu $\( G = (V, E) \)$ je definováno jako minimální počet intervalů k, takových že:  
+- Každému vrcholu $\( v \in V \)$ je přiřazena množina intervalů $\( I_v \subseteq \{1, \ldots, k\} \)$.  
+- Každá hrana $\( (u, v) \in E \)$ má alespoň jeden průnik mezi intervaly $\( I_u \)$ a $\( I_v \)$, tj. $\( I_u \cap I_v \neq \emptyset \)$.  
 
 ---
 
 ## 2. Zakódování do SAT (CNF formát)  
 
 ### Proměnné:  
-Každý vrchol \( v \) je reprezentován pomocí proměnných:  
-\[
-x_{v,k} = 1 \text{ pokud je vrchol } v \text{ přiřazen intervalu } k
-\]  
-Celkový počet proměnných je \( |V| \times k \).  
+Každý vrchol $( v )$ je reprezentován pomocí proměnných:  
+$x_{v,k} = 1$ { pokud je vrchol } v { přiřazen intervalu } k  
+Celkový počet proměnných je $( |V| \times k )$.  
 
 ### Omezení:  
 1. **Pokrytí hran:**  
-Každá hrana \( (u, v) \) musí být pokryta alespoň jedním intervalem:  
-\[
-\bigvee_{k=1}^K (x_{u,k} \land x_{v,k})
-\]  
+Každá hrana $\( (u, v) )$ musí být pokryta alespoň jedním intervalem:  
+$\bigvee_{k=1}^K (x_{u,k} \land x_{v,k})$  
 
 2. **DIMACS CNF formát:**  
 - Každá klauzule odpovídá pokrytí jedné hrany pro všechny intervaly.  
