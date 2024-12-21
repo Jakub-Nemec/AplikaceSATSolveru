@@ -11,4 +11,3 @@ Projekt obsahuje Python skript `script.py`, který:
 
 ---
 
-## Struktura repozitáře
