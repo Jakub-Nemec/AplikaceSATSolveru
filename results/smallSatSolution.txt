@@ -1,0 +1,3 @@
+c Výsledek pro splnitelnou instanci (K3, k=2)
+Satisfiable: solution found.
+Assignments: {1: [0], 2: [0], 3: [0]}
