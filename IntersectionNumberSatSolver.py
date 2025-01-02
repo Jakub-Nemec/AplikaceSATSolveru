@@ -1,34 +1,5 @@
 import subprocess
-
-def read_dimacs_file(filename="smallSat.txt"):
-    """
-    Načte soubor ve formátu DIMACS a vrátí graf a počet intervalů.
-    """
-    graph = {'vertices': [], 'edges': []}
-    num_intervals = 0
-    with open(filename, 'r') as f:
-        lines = f.readlines()
-        for line in lines:
-            if line.startswith('c'):
-                continue  # Komentáře
-            if line.startswith('p'):
-                parts = line.split()
-                num_vars = int(parts[2])
-                num_clauses = int(parts[3])
-            elif line.strip():
-                clause = list(map(int, line.strip().split()))[:-1]  # Odebrání '0'
-                if len(clause) == 2:  # Formát pro hrany
-                    u, v = abs(clause[0]), abs(clause[1])
-                    if u not in graph['vertices']:
-                        graph['vertices'].append(u)
-                    if v not in graph['vertices']:
-                        graph['vertices'].append(v)
-                    graph['edges'].append((u, v))
-
-    # Počet intervalů je extrahován ze souboru
-    num_intervals = num_vars // len(graph['vertices'])
-
-    return graph, num_intervals
+import sys
 
 def write_dimacs_cnf(graph, num_intervals, filename="problem.cnf"):
     """
@@ -95,9 +66,37 @@ def decode_solution(solution, graph, num_intervals):
             intervals[vertex].append(interval)
     return intervals
 
+def load_graph_from_dimacs(filename):
+    """
+    Načte graf z DIMACS CNF souboru.
+    """
+    vertices = set()
+    edges = []
+    with open(filename, "r") as f:
+        for line in f:
+            if line.startswith("p"):
+                _, _, num_vars, _ = line.split()
+                num_intervals = int(num_vars) // len(vertices)
+            elif line.startswith("c"):
+                continue
+            else:
+                vars = list(map(int, line.split()))
+                if vars[-1] == 0:
+                    vars.pop()
+                u, v = vars[:2]
+                edges.append((u, v))
+                vertices.update([u, v])
+    return {'vertices': list(vertices), 'edges': edges}, num_intervals
+
 def main():
-    # Načtení grafu a počtu intervalů z DIMACS souboru
-    graph, num_intervals = read_dimacs_file("smallSat.txt")
+    if len(sys.argv) != 2:
+        print("Použití: python IntersectionNumberSatSolver.py <soubor_instance>")
+        sys.exit(1)
+
+    instance_file = sys.argv[1]
+
+    # Načtení grafu z DIMACS souboru
+    graph, num_intervals = load_graph_from_dimacs(instance_file)
 
     # Generování CNF a spuštění solveru
     write_dimacs_cnf(graph, num_intervals)
