@@ -1,0 +1,68 @@
+Krok 1: Klonování repozitáře
+Prvním krokem je klonování repozitáře z GitHubu. Otevři terminál a spusť následující příkaz, aby sis stáhnul repozitář Glucose:
+
+git clone https://github.com/audemard/glucose.git
+Tento příkaz stáhne všechny soubory z repozitáře do složky glucose.
+
+Krok 2: Instalace potřebných nástrojů
+Pro kompilaci Glucose budeš potřebovat kompilátor C++, protože Glucose je napsaný v C++. Na různé operační systémy se postupy liší:
+
+Na Linuxu nebo Macu:
+Instalace kompilátoru:
+
+Ujisti se, že máš nainstalovaný g++ (kompilátor pro C++) a make (nástroj pro kompilaci). Pokud je nemáš, můžeš je nainstalovat pomocí následujících příkazů.
+
+Na Ubuntu (nebo jiné distribuce založené na Debianu) spusť:
+
+sudo apt-get install g++ make
+Na Macu použij:
+
+brew install gcc
+Na Windows:
+Pokud používáš Windows, doporučuji nainstalovat MinGW nebo použít Windows Subsystem for Linux (WSL).
+
+Pokud použiješ MinGW, stáhni a nainstaluj MinGW z https://sourceforge.net/projects/mingw/.
+Po instalaci nastav MinGW v systémové cestě a zkontroluj, že máš nainstalovány nástroje jako g++ a make.
+Krok 3: Kompilace Glucose SAT solveru
+Přejdi do složky, kam jsi stáhl repozitář Glucose, a spusť příkaz pro kompilaci:
+
+cd glucose
+make
+Tento příkaz spustí proces kompilace. Po dokončení bys měl mít spustitelný soubor glucose v této složce.
+
+Pokud vše proběhlo v pořádku, můžeš tento soubor spustit přímo:
+./glucose
+
+Tento příkaz by měl zobrazit základní informace o tom, že Glucose je připravený k použití.
+
+Krok 4: Použití Glucose solveru v Python skriptu
+Pokud máš Glucose úspěšně nainstalovaný, teď ho můžeš použít ve svém Python skriptu.
+
+Přesvědč se, že máš správně nastavený Python skript, který spustí Glucose. V předchozím kódu voláme Glucose přes příkazovou řádku pomocí subprocess. Pokud je Glucose nainstalovaný správně, tak skript by měl být schopný jej spustit.
+
+Příklad použití ve skriptu:
+
+V Python skriptu, který jsi zmínil, používáme Glucose jako externí program, který spustíme z Pythonu. Pokud máš Glucose v téže složce jako Python skript, mělo by to fungovat.
+
+Spusť Python skript následovně:
+python IntersectionNumberSatSolver.py smallSat.txt
+
+Krok 5: Jak spustit Glucose bez Pythonu (pokud chceš testovat manuálně)
+Pokud chceš testovat Glucose samostatně bez Pythonu, můžeš použít následující příkaz v terminálu:
+./glucose smallSat.txt
+
+Pokud máš soubor smallSat.txt v aktuálním adresáři, Glucose ho načte a pokusí se najít řešení.
+
+Příklady příkazů
+Pokud spustíš Glucose s DIMACS souborem:
+./glucose smallSat.txt
+
+Pokud chceš použít Glucose s nějakým jiným souborem (např. s konkrétním grafem):
+./glucose myGraph.cnf
+
+Pro spouštění Glucose v Python skriptu:
+
+Jak bylo zmíněno dříve, Python skript používá Glucose jako externí proces:
+python IntersectionNumberSatSolver.py smallSat.txt
+
+Tento příkaz by měl automaticky spustit Glucose, použít soubor smallSat.txt a provést výpočet.
