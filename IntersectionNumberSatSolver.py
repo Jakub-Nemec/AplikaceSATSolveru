@@ -34,7 +34,7 @@ def run_glucose_solver(cnf_filename="problem.cnf"):
     """
     Spouští Glucose solver a vrací výsledek.
     """
-    result = subprocess.run(["./glucose", cnf_filename], capture_output=True, text=True)
+    result = subprocess.run(["/path/to/glucose-4.2.1", cnf_filename], capture_output=True, text=True)
     output = result.stdout
     if "UNSAT" in output:
         return None
@@ -66,26 +66,38 @@ def decode_solution(solution, graph, num_intervals):
             intervals[vertex].append(interval)
     return intervals
 
+
 def load_graph_from_dimacs(filename):
     """
     Načte graf z DIMACS CNF souboru.
     """
     vertices = set()
     edges = []
+    num_vars = 0
+
     with open(filename, "r") as f:
         for line in f:
-            if line.startswith("p"):
-                _, _, num_vars, _ = line.split()
-                num_intervals = int(num_vars) // len(vertices)
-            elif line.startswith("c"):
+            # Ignorujeme komentáře
+            if line.startswith("c"):
                 continue
+            # Pokud řádek začíná 'p', čteme počet vrcholů a hran
+            elif line.startswith("p"):
+                _, _, num_vars, num_edges = line.split()
+                num_vars = int(num_vars)
+            # Pokud je to hrana (line nezahrnuje komentáře ani záhlaví)
             else:
                 vars = list(map(int, line.split()))
                 if vars[-1] == 0:
-                    vars.pop()
+                    vars.pop()  # Odstranění 0 na konci
                 u, v = vars[:2]
                 edges.append((u, v))
                 vertices.update([u, v])
+
+    # Kontrola, že byly nalezeny vrcholy
+    if len(vertices) == 0:
+        raise ValueError(f"Chyba: Soubor {filename} neobsahuje žádné vrcholy nebo má nesprávný formát.")
+
+    num_intervals = int(num_vars) // len(vertices)
     return {'vertices': list(vertices), 'edges': edges}, num_intervals
 
 def main():
